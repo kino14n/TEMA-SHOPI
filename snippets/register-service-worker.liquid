@@ -1,0 +1,68 @@
+{%- comment -%}
+  Snippet para registrar Service Worker
+  Incluir en theme.liquid antes de </body>
+{%- endcomment -%}
+
+<script>
+  // Registrar Service Worker solo en producción y HTTPS
+  if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+    window.addEventListener('load', () => {
+      // Solo registrar en móvil para mejor control
+      const isMobile = window.isMobileDevice || false;
+      
+      if (isMobile) {
+        navigator.serviceWorker.register('/service-worker.js', {
+          scope: '/'
+        })
+        .then(registration => {
+          console.log('✅ Service Worker registrado:', registration.scope);
+          
+          // Verificar actualizaciones cada hora
+          setInterval(() => {
+            registration.update();
+          }, 60 * 60 * 1000);
+          
+          // Escuchar actualizaciones
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // Hay una nueva versión disponible
+                console.log('🔄 Nueva versión del Service Worker disponible');
+                
+                // Opcionalmente, mostrar notificación al usuario
+                // showUpdateNotification();
+              }
+            });
+          });
+        })
+        .catch(error => {
+          console.error('❌ Error registrando Service Worker:', error);
+        });
+      } else {
+        console.log('ℹ️ Service Worker deshabilitado en desktop');
+      }
+    });
+    
+    // Función para mostrar notificación de actualización (opcional)
+    function showUpdateNotification() {
+      if (confirm('Hay una nueva versión disponible. ¿Deseas actualizar?')) {
+        navigator.serviceWorker.getRegistration().then(registration => {
+          if (registration && registration.waiting) {
+            registration.waiting.postMessage({ action: 'skipWaiting' });
+            window.location.reload();
+          }
+        });
+      }
+    }
+    
+    // Escuchar cuando el Service Worker toma control
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      console.log('🔄 Service Worker actualizado, recargando página...');
+      window.location.reload();
+    });
+  } else {
+    console.log('ℹ️ Service Worker no soportado o no en HTTPS');
+  }
+</script>

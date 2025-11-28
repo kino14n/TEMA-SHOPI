@@ -1,0 +1,47 @@
+{%- comment -%}
+  Snippet para imágenes optimizadas con lazy loading y srcset responsivo
+  
+  Uso:
+  {% render 'lazy-image', 
+    image: product.featured_image, 
+    alt: product.title, 
+    loading: 'lazy',
+    sizes: '(min-width: 750px) 50vw, 100vw'
+  %}
+  
+  Parámetros:
+  - image: objeto de imagen de Shopify (requerido)
+  - alt: texto alternativo (requerido)
+  - loading: 'lazy' o 'eager' (default: 'lazy')
+  - sizes: atributo sizes para responsive (default: '100vw')
+  - class: clases CSS adicionales (opcional)
+{%- endcomment -%}
+
+{%- liquid
+  assign loading_strategy = loading | default: 'lazy'
+  assign sizes_attr = sizes | default: '100vw'
+  assign img_class = class | default: ''
+-%}
+
+{%- if image != blank -%}
+  <img
+    srcset="{{ image | image_url: width: 375 }} 375w,
+            {{ image | image_url: width: 550 }} 550w,
+            {{ image | image_url: width: 750 }} 750w,
+            {{ image | image_url: width: 1100 }} 1100w,
+            {{ image | image_url: width: 1500 }} 1500w,
+            {{ image | image_url: width: 1780 }} 1780w,
+            {{ image | image_url: width: 2000 }} 2000w"
+    src="{{ image | image_url: width: 1500 }}"
+    sizes="{{ sizes_attr }}"
+    alt="{{ alt | escape }}"
+    loading="{{ loading_strategy }}"
+    width="{{ image.width }}"
+    height="{{ image.height }}"
+    decoding="async"
+    {%- if img_class != blank %} class="{{ img_class }}"{% endif -%}
+  >
+{%- else -%}
+  {%- comment -%}Placeholder si no hay imagen{%- endcomment -%}
+  <div class="image-placeholder" style="background: #f0f0f0; aspect-ratio: 1/1;"></div>
+{%- endif -%}

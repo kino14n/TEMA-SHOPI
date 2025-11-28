@@ -1,0 +1,92 @@
+{%- comment -%}
+  CSS crítico para renderizado rápido en móvil (Above the Fold)
+  Este CSS se carga inline para evitar bloqueo de renderizado
+{%- endcomment -%}
+
+<style>
+  /* CSS crítico para móvil - Above the Fold */
+  @media (max-width: 749px) {
+    /* Reset básico móvil */
+    * {
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+      -webkit-touch-callout: none;
+    }
+    
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    
+    /* Header móvil sticky */
+    .header-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--color-background);
+      will-change: transform;
+    }
+    
+    /* Skeleton loading para imágenes lazy */
+    img[loading="lazy"]:not([src]) {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes skeleton-loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
+    /* Optimización de scroll */
+    .shopify-section {
+      contain: layout style paint;
+    }
+    
+    /* Botones táctiles más grandes */
+    button,
+    .button,
+    a[role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Mejora de performance de scroll */
+    .product-media-modal,
+    .cart-drawer {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+    
+    /* Reducir motion para usuarios que lo prefieren */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+      }
+    }
+  }
+  
+  /* Optimizaciones generales móvil */
+  @media (max-width: 749px) {
+    /* Lazy loading placeholder */
+    .image-placeholder {
+      background: #f5f5f5;
+      display: block;
+      width: 100%;
+    }
+    
+    /* Mejorar performance de imágenes */
+    img {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+    
+    /* Optimizar videos */
+    video {
+      object-fit: cover;
+      max-width: 100%;
+      height: auto;
+    }
+  }
+</style>

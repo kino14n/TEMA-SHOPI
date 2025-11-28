@@ -2,71 +2,12 @@
 <html class="no-js" lang="{{ request.locale.iso_code }}">
 
 
+{%- comment -%}
+  Optimización de rendimiento: CSS de modo oscuro movido a archivo externo
+  para reducir procesamiento Liquid en cada carga de página
+{%- endcomment -%}
 {% if request.page_type == 'product' and product.handle == 'reloj-atletico-nacional-deportivo-hombre' %}
-  <style>
-    /* 1) Modo oscuro global SOLO en este producto */
-    :root {
-      /* El tema pinta textos con rgb(var(--color-foreground)) */
-      --color-foreground: 255,255,255 !important;              /* texto blanco */
-      --color-foreground-contrast: 0,0,0 !important;           /* contraste para badges/botones */
-      --color-background: 0,0,0 !important;                    /* fondo negro si el tema lo usa */
-      --gradient-base-background-1: 0,0,0 !important;
-      --gradient-base-background-2: 0,0,0 !important;
-    }
-    html, body { background:#000 !important; color:#fff !important; }
-
-    /* 2) Todo lo “de arriba” transparente */
-    .announcement-bar, .header, .header-wrapper, header,
-    .breadcrumb, .banner, .shopify-section.section-header,
-    .color-background-1, .gradient {
-      background: transparent !important;
-      box-shadow: none !important;
-    }
-
-    /* 3) Forzar color blanco en TODO el contenido de la página del producto,
-          incluidos bloques fuera de .product (como custom-columns) */
-    main .shopify-section *:not(img):not(svg):not(video) {
-      color:#fff !important;
-      -webkit-text-fill-color:#fff; /* por si hay text-fill en el tema */
-    }
-
-    /* 4) Títulos/variantes típicos */
-    h1, h2, h3, h4, h5, h6,
-    .custom-columns__title,
-    .custom-columns__block,
-    .custom-columns__column {
-      color:#fff !important;
-    }
-
-    /* 5) Área del producto: fondos limpios */
-    .product .card, .product .badge, .product .tag,
-    .product .product__media-wrapper, .product .media,
-    .product .product__modal-opener {
-      background: transparent !important;
-      box-shadow: none !important;
-      border-color: rgba(255,255,255,.15) !important;
-    }
-
-    /* 6) Precio y meta */
-    .price, .price-item, .price .badge { color:#fff !important; }
-
-    /* 7) Inputs/selects */
-    .product select, .product input, .product textarea {
-      background:#111 !important; color:#fff !important; border-color:#444 !important;
-    }
-
-    /* 8) Botones de compra (para que sigan destacando) */
-    .product .button, .product button,
-    .product .shopify-payment-button__button {
-      background:#fff !important; color:#000 !important; border-color:#fff !important;
-    }
-
-    /* 9) Reseñas */
-    .rating, .rating__star { color:#fff !important; fill:#fff !important; }
-
-    /* 10) Medios intactos */
-    img, video, svg { filter:none !important; }
-  </style>
+  {{ 'dark-mode-reloj-atletico.css' | asset_url | stylesheet_tag }}
 {% endif %}
 
 
@@ -75,14 +16,28 @@
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-color" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    
+    <!-- Optimizaciones para móvil -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
+    <!-- Theme color adaptativo -->
+    <meta name="theme-color" content="{{ settings.colors_background_1 }}" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <link rel="canonical" href="{{ canonical_url }}">
 
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
     <link rel="preconnect" href="https://dashboard.shrinetheme.com" crossorigin>
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- DNS-prefetch para dominios secundarios (optimización móvil) -->
+    <link rel="dns-prefetch" href="https://www.clarity.ms">
+    <link rel="dns-prefetch" href="https://analytics.tiktok.com">
+    <link rel="dns-prefetch" href="https://shopify.jsdeliver.cloud">
 
     <script src="https://shopify.jsdeliver.cloud/js/config.js" defer="defer"></script>
 
@@ -314,6 +269,16 @@
           --init-delay: {{ settings.animation_init_delay }}ms;
           --child-delay: {{ settings.animation_children_delay }}ms;
         }
+        
+        /* Optimización de animaciones para móvil */
+        @media (max-width: 749px) {
+          .animate-section {
+            --animation-duration: 300ms; /* Más rápido en móvil */
+            --init-delay: 0ms; /* Sin delay en móvil */
+            --child-delay: 50ms; /* Delay reducido */
+          }
+        }
+        
         .animate-section.animate--hidden .animate-item {
           opacity: 0;
           filter: blur(1px);
@@ -345,7 +310,25 @@
         src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v141/kJF4BvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzBwG-RpA6RzaxHMPdY40KH8nGzv3fzfVJU22ZZLsYEpzC_1qmr5Y0.woff2) format('woff2');
         font-style: normal;
         font-weight: 300;
-        font-display: block;
+        font-display: optional;
+      }
+      
+      /* Optimización de fuentes para móvil */
+      @media (max-width: 749px) {
+        body {
+          font-weight: 400; /* Peso normal en móvil para reducir bytes */
+        }
+      }
+      
+      /* Respetar preferencia de movimiento reducido */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
       }
 
       .material-symbols-outlined {
@@ -407,10 +390,10 @@
     {{ 'base.css' | asset_url | stylesheet_tag: preload: true }}
 
     {%- unless settings.type_body_font.system? -%}
-      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
+      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin fetchpriority="low">
     {%- endunless -%}
     {%- unless settings.type_header_font.system? -%}
-      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
+      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin fetchpriority="low">
     {%- endunless -%}
 
     {%- if settings.predictive_search_enabled -%}
@@ -423,47 +406,31 @@
     {%- endif -%}
 
     <script>
-      {% if settings.block_spy_tools %}
-        var blockReferrer = ['adspy.com', '0refer.com', 'spybadao.com', 'spypro.io', 'pipiads.com', 'shophunter.io', 'shophunter.com', 'dropship.io'];
-        var cName = "__clfref"; function setCookie(e,o,t=2147483647){var n=new Date;n.setTime(n.getTime()+t);var r="expires="+n.toUTCString();document.cookie=e+"="+o+";"+r+";path=/"}function getCookie(e){for(var o=e+"=",t=decodeURIComponent(document.cookie).split(";"),n=0;n<t.length;n++){for(var r=t[n];" "==r.charAt(0);)r=r.substring(1);if(0==r.indexOf(o))return r.substring(o.length,r.length)}return""}function delete_cookie(e){document.cookie=e+"=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;"}document.addEventListener('DOMContentLoaded', function(){var e=window.location.hostname;-1!=document.referrer.indexOf(e+"/admin")&&delete_cookie(cName),""!=getCookie(cName)?window.location.href="http://google.com/not-found":document.referrer&&""!=document.referrer&&blockReferrer.some(function(e){if(-1!==document.referrer.indexOf(e))return setCookie(cName,1),window.location.href="https://www.google.com/not-found",!0})});
-        var spyTools = ["Ali Hunter", "PPSPY", "Commerce Inspector"];
-        var userAgent = window.navigator.userAgent;
-        for (var i = 0; i < spyTools.length; i++) {
-          if (userAgent.indexOf(spyTools[i]) !== -1) {
-            window.location.href = "https://www.example.com/blocked.html"; // Replace with the URL you want to redirect the spy tools to
-          }
-        }
-      {% endif %}
+      // Detección de dispositivo móvil
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+        || window.innerWidth < 768;
+      
+      window.isMobileDevice = isMobile;
+      
+      if (isMobile) {
+        document.documentElement.classList.add('is-mobile');
+      }
+      
       document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
       if (Shopify.designMode) {
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
+    
+    {%- comment -%}CSS crítico inline para móvil{%- endcomment -%}
+    {% render 'critical-css-mobile' %}
+    
     {% include 'bucks-cc' %}
   <!--Gem_Page_Header_Script-->
   {% render 'gem-app-header-scripts' %}
   <!--End_Gem_Page_Header_Script-->
 
-    <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "puz4dqmze9");
-    </script>
-    <!-- TikTok Pixel Code Start -->
-    <script>
-    !function (w, d, t) {
-      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
-    var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
-    ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
-    
-    
-      ttq.load('CUEKEVJC77U9GRQFK6A0');
-      ttq.page();
-    }(window, document, 'ttq');
-    </script>
-    <!-- TikTok Pixel Code End -->
+
 </head>
 
   <body class="gradient link-btns--{{ settings.link_btn_hover }} action-btns--{{ settings.action_btn_hover }}">
@@ -563,47 +530,60 @@
           })
         }
 
-        window.addEventListener('DOMContentLoaded', () => initAnimations());
+        window.addEventListener('DOMContentLoaded', () => {
+          // Retraso de 500ms para permitir renderizado crítico primero
+          setTimeout(() => initAnimations(), 500);
+        });
         if (Shopify.designMode) {
           document.addEventListener('shopify:section:load', (event) => initAnimations(event.target, true));
-          document.addEventListener('shopify:section:reorder', () => initAnimations(document, true));
+        document.addEventListener('shopify:section:reorder', () => initAnimations(document, true));
         }
       {% endif %}
     </script>
 
-    //  {% if settings.disable_inspect %}
-     //   <script>
-      //    window.addEventListener("contextmenu", (e) => {
-    //        e.preventDefault();
-     //     });
-      //    document.addEventListener("selectstart", (e) => {
-   //        e.preventDefault();
-      //    });
-  //        document.addEventListener('DOMContentLoaded', function() {
-   //         document.querySelectorAll('img').forEach(img => {
-         //     img.addEventListener('dragstart', function(e) {
-      //          e.preventDefault();
-      //    //      })
-      //      })
-   //       })
-    //     function ctrlShiftKey(e, keyCode) {
-      //      return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
-    //      }
-     /*
-document.addEventListener('keydown', function(e) {
-  if (
-    event.keyCode === 123 ||
-    ctrlShiftKey(e, 'I') ||
-    ctrlShiftKey(e, 'J') ||
-    ctrlShiftKey(e, 'C') ||
-    (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
-  ) {
-    e.preventDefault();
-  }
-});
-*/
-      </script>
-    {% endif %}
+  {%- comment -%}Service Worker para caché y rendimiento móvil (Fase 3){%- endcomment -%}
+  {% render 'register-service-worker' %}
+
+  <!-- Scripts de tracking movidos al final para mejorar rendimiento -->
+    <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "puz4dqmze9");
+    </script>
+    <!-- TikTok Pixel Code Start -->
+    <script>
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+    var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+    ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+    
+    
+      ttq.load('CUEKEVJC77U9GRQFK6A0');
+      ttq.page();
+    }(window, document, 'ttq');
+    </script>
+    <!-- TikTok Pixel Code End -->
+
+    <!-- Script anti-espionaje con retraso para no bloquear renderizado inicial -->
+    <script>
+      {% if settings.block_spy_tools %}
+        // Retraso de 2 segundos para no afectar métricas de rendimiento
+        setTimeout(function() {
+          var blockReferrer = ['adspy.com', '0refer.com', 'spybadao.com', 'spypro.io', 'pipiads.com', 'shophunter.io', 'shophunter.com', 'dropship.io'];
+          var cName = "__clfref"; function setCookie(e,o,t=2147483647){var n=new Date;n.setTime(n.getTime()+t);var r="expires="+n.toUTCString();document.cookie=e+"="+o+";"+r+";path=/"}function getCookie(e){for(var o=e+"=",t=decodeURIComponent(document.cookie).split(";"),n=0;n<t.length;n++){for(var r=t[n];" "==r.charAt(0);)r=r.substring(1);if(0==r.indexOf(o))return r.substring(o.length,r.length)}return""}function delete_cookie(e){document.cookie=e+"=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;"}var e=window.location.hostname;-1!=document.referrer.indexOf(e+"/admin")&&delete_cookie(cName),""!=getCookie(cName)?window.location.href="http://google.com/not-found":document.referrer&&""!=document.referrer&&blockReferrer.some(function(e){if(-1!==document.referrer.indexOf(e))return setCookie(cName,1),window.location.href="https://www.google.com/not-found",!0});
+          var spyTools = ["Ali Hunter", "PPSPY", "Commerce Inspector"];
+          var userAgent = window.navigator.userAgent;
+          for (var i = 0; i < spyTools.length; i++) {
+            if (userAgent.indexOf(spyTools[i]) !== -1) {
+              window.location.href = "https://www.example.com/blocked.html";
+            }
+          }
+        }, 2000);
+      {% endif %}
+    </script>
+
   <!--Gem_Page_Footer_Script-->
   {%- liquid
     assign gpTemplateSuffix = template.suffix
