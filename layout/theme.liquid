@@ -11,6 +11,31 @@
 
 <html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
+    <!-- Script de Depuración y Rendimiento (Global Error Handler) -->
+    <script>
+      (function() {
+        var perfStart = performance.now();
+        window.addEventListener('DOMContentLoaded', function() {
+          var domReady = performance.now() - perfStart;
+          console.log('[Depuración de Carga] DOMContentLoaded:', domReady.toFixed(2) + 'ms');
+        });
+        window.addEventListener('load', function() {
+          var fullLoad = performance.now() - perfStart;
+          console.log('[Depuración de Carga] Full Load:', fullLoad.toFixed(2) + 'ms');
+        });
+
+        // Captura global de errores
+        window.addEventListener('error', function(event) {
+          console.error('[Error Global Capturado]', {
+            mensaje: event.message,
+            archivo: event.filename,
+            linea: event.lineno,
+            columna: event.colno,
+            errorObj: event.error
+          });
+        });
+      })();
+    </script>
 	<!-- Added by AVADA SEO Suite -->
 	{% include 'avada-seo' %}
 	<!-- /Added by AVADA SEO Suite -->
@@ -61,6 +86,8 @@
 
     <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
     <link rel="stylesheet" href="{{ 'custom.css' | asset_url }}">
+    <!-- Dependencia CSS de Flickity -->
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css" crossorigin="anonymous">
 
     {% render 'microdata-schema' %}
 
@@ -124,10 +151,12 @@
       <script src="{{ 'customer_area.js' | shopify_asset_url }}" defer></script>
     {%- endif -%}
 
+    <!-- Orden estricto de dependencias JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
-    <script src="{{ 'theme.min.js' | asset_url }}" defer></script>
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js" crossorigin="anonymous" defer></script>
+    <script src="{{ 'theme.min.js' | asset_url }}" crossorigin="anonymous" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'" />
-    <script src="{{ 'custom.js' | asset_url }}" defer></script>
+    <script src="{{ 'custom.js' | asset_url }}" crossorigin="anonymous" defer></script>
 
     {%- if request.page_type != 'cart' -%}
       <script>
