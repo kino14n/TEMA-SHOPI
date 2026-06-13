@@ -12450,7 +12450,7 @@
           return;
         } // On desktop, we uses Drift to power the zoom
 
-
+        /* Drift desactivado para permitir PhotoSwipe en PC
         if (Responsive.matchesBreakpoint('lap-and-up')) {
           this.driftObjects = [];
           var zoomWrapper = this.element.querySelector('.product__zoom-wrapper');
@@ -12465,6 +12465,7 @@
             }));
           });
         }
+        */
       }
     }, {
       key: "_openMobileZoom",
@@ -12474,7 +12475,7 @@
         // On mobile, we use instead PhotoSwipe
         var pswpElement = this.element.querySelector('.pswp');
 
-        if (!pswpElement || !Responsive.matchesBreakpoint('pocket')) {
+        if (!pswpElement) { // Modificado para permitir clic en escritorio
           return;
         }
 
@@ -12536,10 +12537,10 @@
     }, {
       key: "_handleZoomForMediaQuery",
       value: function _handleZoomForMediaQuery() {
-        if (Responsive.matchesBreakpoint('lap-and-up') && this.photoSwipeInstance) {
-          this.photoSwipeInstance.close();
-          this.photoSwipeInstance = null;
-        }
+        // if (Responsive.matchesBreakpoint('lap-and-up') && this.photoSwipeInstance) {
+        //   this.photoSwipeInstance.close();
+        //   this.photoSwipeInstance = null;
+        // }
       }
     }, {
       key: "_onGallerySlideChanged",
