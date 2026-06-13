@@ -1,0 +1,80 @@
+{%- comment -%}
+  Schema.org LocalBusiness – Kino Company S.A.S.
+  Datos estructurados JSON-LD para Google con las sedes de Medellín y Bogotá.
+  IMPORTANTE: Actualizar las direcciones, teléfonos y coordenadas con los datos reales.
+{%- endcomment -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "name": {{ shop.name | json }},
+  "legalName": "Kino Company S.A.S.",
+  "description": "Importadora y distribuidora mayorista de relojes y accesorios en Colombia. Sedes en Medellín y Bogotá.",
+  "url": {{ shop.url | json }},
+  {%- if shop.brand.logo -%}
+  "logo": "https:{{ shop.brand.logo | image_url: width: 600 }}",
+  {%- endif -%}
+  "image": "https:{{ shop.brand.logo | image_url: width: 600 | default: '' }}",
+  "priceRange": "$$",
+  "currenciesAccepted": "COP",
+  "paymentAccepted": "Tarjeta de crédito, Tarjeta débito, PSE, Nequi, Efectivo",
+  "address": [
+    {
+      "@type": "PostalAddress",
+      "streetAddress": "Medellín",
+      "addressLocality": "Medellín",
+      "addressRegion": "Antioquia",
+      "postalCode": "050001",
+      "addressCountry": "CO"
+    },
+    {
+      "@type": "PostalAddress",
+      "streetAddress": "Bogotá",
+      "addressLocality": "Bogotá",
+      "addressRegion": "Cundinamarca",
+      "postalCode": "110111",
+      "addressCountry": "CO"
+    }
+  ],
+  "telephone": "+57 318 5640716",
+  "email": "ventas@kinocompanysas.com.co",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "08:00",
+      "closes": "17:30"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Saturday",
+      "opens": "09:00",
+      "closes": "14:00"
+    }
+  ],
+  "sameAs": [
+    {%- if settings.social_facebook != blank -%}{{ settings.social_facebook | json }},{%- endif -%}
+    {%- if settings.social_instagram != blank -%}{{ settings.social_instagram | json }},{%- endif -%}
+    {%- if settings.social_tiktok != blank -%}{{ settings.social_tiktok | json }},{%- endif -%}
+    {%- if settings.social_youtube != blank -%}{{ settings.social_youtube | json }},{%- endif -%}
+    {%- if settings.social_twitter != blank -%}{{ settings.social_twitter | json }}{%- endif -%}
+  ],
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Medellín"
+    },
+    {
+      "@type": "City",
+      "name": "Bogotá"
+    },
+    {
+      "@type": "Country",
+      "name": "Colombia"
+    }
+  ],
+  "knowsAbout": ["Relojes al por mayor", "Distribución de relojes", "Importación de relojes", "Accesorios mayoristas"],
+  "slogan": "Surtimos tu negocio"
+}
+</script>

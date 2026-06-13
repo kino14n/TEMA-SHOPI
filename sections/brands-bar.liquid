@@ -1,0 +1,216 @@
+{%- comment -%}
+  Barra de Marcas Distribuidas – Kino Company S.A.S.
+  Sección configurable con logos de marcas en slider animado tipo marquee.
+{%- endcomment -%}
+
+<section class="section brands-bar-section" data-section-id="{{ section.id }}" data-section-type="brands-bar">
+  <div class="container">
+    {%- if section.settings.title != blank -%}
+      <header class="section__header">
+        <h2 class="section__title heading h3">{{ section.settings.title | escape }}</h2>
+        {%- if section.settings.subtitle != blank -%}
+          <p class="section__subtitle" style="color: var(--text-color); opacity: 0.8; margin-top: 5px;">{{ section.settings.subtitle | escape }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="brands-bar__track-wrapper">
+        <div class="brands-bar__track">
+          {%- for block in section.blocks -%}
+            <div class="brands-bar__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.image != blank -%}
+                <a {% if block.settings.link %}href="{{ block.settings.link }}"{% endif %} class="brands-bar__link" {% if block.settings.link %}aria-label="{{ block.settings.brand_name | default: 'Marca' | escape }}"{% endif %}>
+                  <img
+                    class="brands-bar__logo lazyload"
+                    data-src="{{ block.settings.image | image_url: width: 200 }}"
+                    alt="{{ block.settings.brand_name | default: block.settings.image.alt | default: 'Marca distribuida por Kino Company' | escape }}"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
+                    loading="lazy"
+                  >
+                </a>
+              {%- else -%}
+                <div class="brands-bar__placeholder">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+          {%- comment -%}Duplicar para efecto marquee continuo{%- endcomment -%}
+          {%- for block in section.blocks -%}
+            <div class="brands-bar__item" aria-hidden="true">
+              {%- if block.settings.image != blank -%}
+                <a {% if block.settings.link %}href="{{ block.settings.link }}"{% endif %} class="brands-bar__link" tabindex="-1">
+                  <img
+                    class="brands-bar__logo lazyload"
+                    data-src="{{ block.settings.image | image_url: width: 200 }}"
+                    alt="{{ block.settings.brand_name | default: block.settings.image.alt | default: 'Marca distribuida' | escape }}"
+                    loading="lazy"
+                  >
+                </a>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <style>
+    .brands-bar-section {
+      padding: 30px 0;
+      overflow: hidden;
+    }
+    .brands-bar__track-wrapper {
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+    }
+    .brands-bar__track-wrapper::before,
+    .brands-bar__track-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 60px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .brands-bar__track-wrapper::before {
+      left: 0;
+      background: linear-gradient(to right, var(--background), transparent);
+    }
+    .brands-bar__track-wrapper::after {
+      right: 0;
+      background: linear-gradient(to left, var(--background), transparent);
+    }
+    .brands-bar__track {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      animation: brands-marquee {{ section.settings.speed | default: 30 }}s linear infinite;
+      width: max-content;
+    }
+    .brands-bar__track:hover {
+      animation-play-state: paused;
+    }
+    .brands-bar__item {
+      flex-shrink: 0;
+    }
+    .brands-bar__logo {
+      max-height: 50px;
+      width: auto;
+      object-fit: contain;
+      filter: {% if section.settings.grayscale %}grayscale(100%){% else %}none{% endif %};
+      opacity: 0.8;
+      transition: filter 0.3s ease, opacity 0.3s ease;
+    }
+    .brands-bar__logo:hover {
+      filter: none;
+      opacity: 1;
+    }
+    .brands-bar__link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brands-bar__placeholder {
+      width: 120px;
+      height: 50px;
+    }
+    .brands-bar__placeholder .placeholder-svg {
+      max-height: 50px;
+    }
+    @keyframes brands-marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @media (max-width: 640px) {
+      .brands-bar__logo {
+        max-height: 35px;
+      }
+      .brands-bar__track {
+        gap: 25px;
+      }
+    }
+  </style>
+</section>
+
+{% schema %}
+{
+  "name": "Barra de marcas",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Marcas que distribuimos"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Importadores directos y distribuidores mayoristas en Colombia"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "label": "Velocidad del slider",
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "grayscale",
+      "label": "Logos en escala de grises",
+      "info": "Los logos se colorean al pasar el mouse",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Marca",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo de la marca",
+          "info": "250 x 80px .png con fondo transparente recomendado"
+        },
+        {
+          "type": "text",
+          "id": "brand_name",
+          "label": "Nombre de la marca"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Enlace a la colección"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Image",
+      "name": "Barra de marcas",
+      "settings": {
+        "title": "Marcas que distribuimos"
+      },
+      "blocks": [
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" }
+      ]
+    }
+  ]
+}
+{% endschema %}

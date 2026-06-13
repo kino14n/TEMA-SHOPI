@@ -1,0 +1,213 @@
+{%- comment -%}
+  Testimonios de Mayoristas – Kino Company S.A.S.
+  Sección configurable con cards de testimonios de clientes mayoristas satisfechos.
+{%- endcomment -%}
+
+<section class="section testimonials-section" data-section-id="{{ section.id }}" data-section-type="testimonials">
+  <div class="container">
+    {%- if section.settings.title != blank -%}
+      <header class="section__header">
+        <h2 class="section__title heading h3">{{ section.settings.title | escape }}</h2>
+        {%- if section.settings.subtitle != blank -%}
+          <p style="color: var(--text-color); opacity: 0.8; margin-top: 5px;">{{ section.settings.subtitle | escape }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="testimonials__grid">
+        {%- for block in section.blocks -%}
+          <div class="testimonials__card" {{ block.shopify_attributes }}>
+            <div class="testimonials__stars" aria-label="{{ block.settings.rating }} de 5 estrellas">
+              {%- for i in (1..5) -%}
+                {%- if i <= block.settings.rating -%}
+                  <span class="testimonials__star testimonials__star--filled">★</span>
+                {%- else -%}
+                  <span class="testimonials__star">★</span>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+            <blockquote class="testimonials__text">
+              <p>"{{ block.settings.text | escape }}"</p>
+            </blockquote>
+            <div class="testimonials__author">
+              <strong class="testimonials__name">{{ block.settings.author_name | escape }}</strong>
+              {%- if block.settings.author_city != blank -%}
+                <span class="testimonials__city">{{ block.settings.author_city | escape }}</span>
+              {%- endif -%}
+              {%- if block.settings.author_business != blank -%}
+                <span class="testimonials__business">{{ block.settings.author_business | escape }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <style>
+    .testimonials-section {
+      padding: 50px 0;
+    }
+    .testimonials__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+    .testimonials__card {
+      background: var(--secondary-background);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .testimonials__card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+    .testimonials__stars {
+      margin-bottom: 12px;
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+    .testimonials__star {
+      color: var(--border-color);
+    }
+    .testimonials__star--filled {
+      color: #f5a623;
+    }
+    .testimonials__text {
+      margin: 0 0 16px 0;
+      padding: 0;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--text-color);
+      opacity: 0.9;
+    }
+    .testimonials__text p {
+      margin: 0;
+    }
+    .testimonials__author {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .testimonials__name {
+      color: var(--heading-color);
+      font-size: 0.95em;
+    }
+    .testimonials__city,
+    .testimonials__business {
+      font-size: 0.85em;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+    @media (max-width: 640px) {
+      .testimonials__grid {
+        grid-template-columns: 1fr;
+      }
+      .testimonials__card {
+        padding: 22px 18px;
+      }
+    }
+  </style>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonios mayoristas",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Lo que dicen nuestros clientes mayoristas"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Más de 500 comerciantes confían en Kino Company para surtir sus negocios"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonio",
+      "settings": [
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Nombre del cliente",
+          "default": "Carlos Pérez"
+        },
+        {
+          "type": "text",
+          "id": "author_city",
+          "label": "Ciudad",
+          "default": "Medellín"
+        },
+        {
+          "type": "text",
+          "id": "author_business",
+          "label": "Nombre del negocio (opcional)"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Testimonio",
+          "default": "Excelente variedad de relojes y precios competitivos. Kino Company es mi proveedor de confianza desde hace más de 3 años."
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Calificación (estrellas)",
+          "default": 5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Testimonios mayoristas",
+      "settings": {
+        "title": "Lo que dicen nuestros clientes mayoristas"
+      },
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Carlos Pérez",
+            "author_city": "Medellín",
+            "text": "Excelente variedad de relojes y precios competitivos. Kino Company es mi proveedor de confianza desde hace más de 3 años.",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "María Gómez",
+            "author_city": "Bogotá",
+            "text": "Los mejores precios mayoristas que he encontrado en Colombia. El envío siempre llega a tiempo y el servicio al cliente es excelente.",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "author_name": "Andrés Rodríguez",
+            "author_city": "Cali",
+            "text": "Desde que trabajo con Kino Company, mis ventas han aumentado. La calidad de los relojes y la variedad de marcas son incomparables.",
+            "rating": 5
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

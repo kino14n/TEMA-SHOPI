@@ -1,0 +1,70 @@
+{%- comment -%}
+  Schema.org Product enriquecido – Kino Company S.A.S.
+  Complementa microdata-schema.liquid con datos de vendedor, reviews Loox, y contexto mayorista.
+  Solo se renderiza en páginas de producto.
+{%- endcomment -%}
+
+{%- if request.page_type == 'product' -%}
+{%- assign selected_variant = product.selected_or_first_available_variant -%}
+{%- assign days_valid = 30 | times: 86400 -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncatewords: 100 | json }},
+  "url": "{{ shop.url }}{{ product.url }}",
+  "sku": {{ selected_variant.sku | json }},
+  "brand": {
+    "@type": "Brand",
+    "name": {{ product.vendor | json }}
+  },
+  "category": {{ product.type | json }},
+  {%- if product.featured_image -%}
+  "image": [
+    {%- for image in product.images limit: 5 -%}
+      "https:{{ image | image_url: width: 1024 }}"{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ],
+  {%- endif -%}
+  "offers": {
+    "@type": "AggregateOffer",
+    "lowPrice": {{ product.price_min | money_without_currency | json }},
+    "highPrice": {{ product.price_max | money_without_currency | json }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "offerCount": {{ product.variants.size }},
+    "availability": {% if product.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+    "seller": {
+      "@type": "Organization",
+      "name": "Kino Company S.A.S.",
+      "url": {{ shop.url | json }}
+    },
+    "priceValidUntil": "{{ 'now' | date: '%s' | plus: days_valid | date: '%Y-%m-%d' }}"
+  }
+  {%- if product.metafields.loox.num_reviews and product.metafields.loox.num_reviews != '0' -%}
+  ,"aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": {{ product.metafields.loox.avg_rating | json }},
+    "reviewCount": {{ product.metafields.loox.num_reviews | json }},
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+  {%- endif -%}
+  {%- if selected_variant.barcode != blank -%}
+  {%- assign barcode_length = selected_variant.barcode | size -%}
+  {%- if barcode_length == 13 -%}
+  ,"gtin13": {{ selected_variant.barcode | json }}
+  {%- elsif barcode_length == 12 -%}
+  ,"gtin12": {{ selected_variant.barcode | json }}
+  {%- elsif barcode_length == 8 -%}
+  ,"gtin8": {{ selected_variant.barcode | json }}
+  {%- elsif barcode_length == 14 -%}
+  ,"gtin14": {{ selected_variant.barcode | json }}
+  {%- else -%}
+  ,"mpn": {{ selected_variant.barcode | json }}
+  {%- endif -%}
+  {%- endif -%}
+}
+</script>
+{%- endif -%}

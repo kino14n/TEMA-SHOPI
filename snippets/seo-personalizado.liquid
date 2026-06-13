@@ -1,0 +1,46 @@
+{%- comment -%}
+  SEO Personalizado – Kino Company S.A.S.
+  Genera meta tags optimizadas para posicionar la tienda como mayorista líder de relojes
+  en Medellín y Bogotá. Usa metafields custom.seo_description si existen.
+{%- endcomment -%}
+
+{%- capture seo_keywords -%}
+relojes al por mayor, relojes mayoristas Medellín, relojes mayoristas Bogotá, distribuidor de relojes Colombia, Kino Company, importadora de relojes, relojes al por mayor Colombia, accesorios al por mayor, relojería mayorista, proveedor de relojes, Joefox, Sanse, Curren, T5, Mini Focus, Forsining, Winner, Skmei, Kardoo
+{%- endcapture -%}
+
+{%- if request.page_type == 'product' -%}
+  {%- if product.metafields.custom.seo_description != blank -%}
+    <meta name="description" content="{{ product.metafields.custom.seo_description | escape }}">
+  {%- elsif page_description == blank -%}
+    <meta name="description" content="{{ product.title | escape }} – Reloj al por mayor en {{ shop.address.city | default: 'Colombia' }}. Distribuidor mayorista Kino Company S.A.S. Precios competitivos para tu negocio. {{ product.vendor | escape }}.">
+  {%- endif -%}
+  <meta name="keywords" content="{{ seo_keywords }}, {{ product.title | escape }}, {{ product.vendor | escape }}, {{ product.type | escape }}">
+
+{%- elsif request.page_type == 'collection' -%}
+  {%- if collection.metafields.custom.seo_description != blank -%}
+    <meta name="description" content="{{ collection.metafields.custom.seo_description | escape }}">
+  {%- elsif page_description == blank -%}
+    <meta name="description" content="{{ collection.title | escape }} – Colección de relojes al por mayor. Kino Company S.A.S., importadora y distribuidora líder en Medellín y Bogotá. Precios mayoristas.">
+  {%- endif -%}
+  <meta name="keywords" content="{{ seo_keywords }}, {{ collection.title | escape }}">
+
+{%- elsif request.page_type == 'index' -%}
+  {%- if page_description == blank -%}
+    <meta name="description" content="Kino Company S.A.S. – Importadora y distribuidora mayorista de relojes y accesorios en Colombia. Sedes en Medellín y Bogotá. Surtimos tu negocio con las mejores marcas a precios competitivos.">
+  {%- endif -%}
+  <meta name="keywords" content="{{ seo_keywords }}">
+
+{%- elsif request.page_type == 'blog' or request.page_type == 'article' -%}
+  <meta name="keywords" content="{{ seo_keywords }}, blog relojes, guías de relojería mayorista">
+
+{%- elsif request.page_type == 'search' -%}
+  <meta name="keywords" content="{{ seo_keywords }}">
+
+{%- else -%}
+  {%- if page_description == blank and page -%}
+    {%- if page.metafields.custom.seo_description != blank -%}
+      <meta name="description" content="{{ page.metafields.custom.seo_description | escape }}">
+    {%- endif -%}
+  {%- endif -%}
+  <meta name="keywords" content="{{ seo_keywords }}">
+{%- endif -%}

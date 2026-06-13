@@ -59,7 +59,7 @@
     --heading-color            : {{ settings.heading_color }};
     --border-color             : {{ settings.border_color }};
     --border-color-rgb         : {{ settings.border_color | color_extract: 'red' }}, {{ settings.border_color | color_extract: 'green' }}, {{ settings.border_color | color_extract: 'blue' }};
-    --form-border-color        : {{ settings.border_color | color_darken: 5 }};
+    --form-border-color        : {{ settings.border_color }};
     --accent-color             : {{ settings.accent_color }};
     --accent-color-rgb         : {{ settings.accent_color | color_extract: 'red' }}, {{ settings.accent_color | color_extract: 'green' }}, {{ settings.accent_color | color_extract: 'blue' }};
     --link-color               : {{ settings.link_color }};

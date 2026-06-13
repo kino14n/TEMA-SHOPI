@@ -19,6 +19,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, maximum-scale=5.0">
     <meta name="theme-color" content="{{ settings.accent_color }}">
 
+    {%- comment -%}SEO Mayorista Kino Company{%- endcomment -%}
+    {% render 'seo-personalizado' %}
+
     {%- capture seo_page_title -%}
       {%- if request.page_type == 'search' and search.terms != blank -%}
         {{ search.terms | split: ' AND ' | last | split: 'product_type:' | last }} - {{ shop.name }}
@@ -61,33 +64,7 @@
 
     {% render 'microdata-schema' %}
 
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '725675949037093');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=725675949037093&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-<script>
-		!function (w, d, t) {
-		  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++
-)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=i+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
-		
-		  ttq.load('CI2BSV3C77U2H86M4KV0');
-		  ttq.page();
-		}(window, document, 'ttq');
-	</script>    
+    {%- comment -%}Tracking scripts moved to lazy-tracking snippet{%- endcomment -%}    
 
   
     <script>
@@ -147,10 +124,9 @@ src="https://www.facebook.com/tr?id=725675949037093&ev=PageView&noscript=1"
       <script src="{{ 'customer_area.js' | shopify_asset_url }}" defer></script>
     {%- endif -%}
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
     <script src="{{ 'theme.min.js' | asset_url }}" defer></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'" />
     <script src="{{ 'custom.js' | asset_url }}" defer></script>
 
     {%- if request.page_type != 'cart' -%}
@@ -174,28 +150,12 @@ src="https://www.facebook.com/tr?id=725675949037093&ev=PageView&noscript=1"
 <!--Gem_Page_Header_Script-->
 {% render 'gem-app-header-scripts' %}
 <!--End_Gem_Page_Header_Script-->
-    <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "q6qyph50av");
-    </script>
+    {%- comment -%}Clarity moved to lazy-tracking snippet{%- endcomment -%}
 {% comment %} REMOVED BUILDER:  {% endcomment %}
 {% comment %} REMOVED BUILDER: {% comment %}   {% render 'shogun-head' %} {% endcomment %} {% endcomment %}
 {% include 'hulk_po_vd' %}
 
-  <script>
-    (function (c, s, q, u, a, r, e) {
-        c.hj=c.hj||function(){(c.hj.q=c.hj.q||[]).push(arguments)};
-        c._hjSettings = { hjid: a };
-        r = s.getElementsByTagName('head')[0];
-        e = s.createElement('script');
-        e.async = true;
-        e.src = q + c._hjSettings.hjid + u;
-        r.appendChild(e);
-    })(window, document, 'https://static.hj.contentsquare.net/c/csq-', '.js', 6390736);
-</script>
+  {%- comment -%}Hotjar moved to lazy-tracking snippet{%- endcomment -%}
   
   
   
@@ -206,7 +166,12 @@ src="https://www.facebook.com/tr?id=725675949037093&ev=PageView&noscript=1"
 {% endif %}
 
 {{ 'custom-optimized.css' | asset_url | stylesheet_tag }}
-{% include 'pagefly-app-header' %}</head>
+{% include 'pagefly-app-header' %}
+
+    {%- comment -%}Schema.org Datos Estructurados – Kino Company S.A.S.{%- endcomment -%}
+    {% render 'schema-local-business' %}
+    {% render 'schema-product' %}
+</head>
 
   <body class="warehouse--v1 {% if settings.animation_image_zoom %}features--animate-zoom{% endif%} template-{{ request.page_type | handle }} {% if request.page_type contains '/' %}template-{{ request.page_type | split: '/' | last | handle }}{% endif %}" data-instant-intensity="viewport" class=\"{% if hide_chrome %}no-chrome{% endif %}\">
     <a href="#main" class="visually-hidden skip-to-content">{{ 'general.accessibility.skip_to_content' | t }}</a>
@@ -335,6 +300,7 @@ src="https://www.facebook.com/tr?id=725675949037093&ev=PageView&noscript=1"
 
 
 
-  {{ 'theme.min.js' | asset_url | script_tag }}
+  {% render 'lazy-tracking' %}
+  {%- comment -%}theme.min.js ya se carga en el head con defer – no duplicar{%- endcomment -%}
 </body>
 </html>

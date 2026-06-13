@@ -567,3 +567,15 @@ button.qtyplus, button.qtyminus {
   	flex-direction: column;
   }
 }
+
+/* Eliminar todos los bordes, marcos y líneas de la plantilla */
+.card, .layout__section, .collection__toolbar, .collection__toolbar--bordered, .product-item, .collection-item, .box, .panel, .fretefundo, .tempofrete, .ui-box-component-pdp__visible--desktop {
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+hr {
+    display: none !important;
+}

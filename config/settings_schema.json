@@ -360,7 +360,7 @@
             "label": "Products, blog posts and pages"
           }
         ],
-        "default": "product,article"
+        "default": "product,article,page"
       }
     ]
   },
